@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Times New Roman', Times, serif;
+            line-height: 1.5;
+        }
+
+        header {
+            height: 200vh;
+            background-image: linear-gradient(#222, #fff);
+        }
+
+        footer {
+            height: 200vh;
+            background-image: linear-gradient(#fff, #222);
+        }
+
+        header p {
+            position: sticky;
+            top: 50vh;
+            transform: translateY(-50%);
+            margin: 0;
+            font-size: 20px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .container {
+            position: relative;
+            height: 400vh;
+        }
+
+        .sticky-wrapper {
+            position: sticky;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            transition: all 0.8s;
+        }
+
+        .content.hidden {
+            visibility: hidden;
+            opacity: 0;
+        }
+
+        .content div {
+            width: 40%;
+            height: 80%;
+        }
+
+        .content p {
+            width: 30%;
+            font-size: 32px;
+        }
+
+        #content1 div {
+            background-image: linear-gradient(120deg, #ec6161, #ffec44);
+        }
+
+        #content2 div {
+            background-image: linear-gradient(120deg, #9beb51, #4edbdb);
+        }
+
+        #content3 div {
+            background-image: linear-gradient(120deg, #436bd8, #e451dc);
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <p id="header-text">Scroll Down</p>
+    </header>
+    <div id="container" class="container">
+        <div class="sticky-wrapper">
+            <div id="content1" class="content">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <div><!-- gradiation --></div>
+            </div>
+            <div id="content2" class="content hidden">
+                <p>Pellentesque rutrum, nisl sit amet malesuada ullamcorper.</p>
+                <div><!-- gradiation --></div>
+            </div>
+            <div id="content3" class="content hidden">
+                <p>Ligula tortor sagittis urna, vitae mollis nisi metus ut tellus.</p>
+                <div><!-- gradiation --></div>
+            </div>
+        </div>
+    </div>
+    <footer></footer>
+
+    <script>
+        const container = document.getElementById('container')
+        const contents = document.querySelectorAll('.content')
+        const text = document.querySelectorAll('.content p')
+
+        // absolute position of container
+        const containerTop = container.getBoundingClientRect().top + window.pageYOffset
+
+        window.addEventListener('scroll', () => {
+            contents.forEach((e, index) => {
+                if (window.pageYOffset >= containerTop + (window.innerHeight * index)) {
+                    e.classList.remove('hidden')
+
+                    const y = window.pageYOffset - containerTop - (window.innerHeight * index)
+                    if (window.innerHeight - y < 200 && e !== contents[contents.length - 1]) {
+                        text[index].style.opacity = ((window.innerHeight - y) / 200) + 0.2
+                    } else if (y < 200 && e !== contents[0]) {
+                        text[index].style.opacity = (y / 200) + 0.2
+                    } else {
+                        text[index].style.opacity = 1
+                    }
+                    text[index].style.transform = `translateY(${(y * -0.1) + (window.innerHeight * 0.05)}px)`
+                }
+                if (window.pageYOffset <= containerTop + (window.innerHeight * index)) {
+                    if (e !== contents[0]) e.classList.add('hidden')
+                }
+            })
+        })
+
+
+        // header text
+        const headerText = document.getElementById('header-text')
+        window.addEventListener('scroll', () => {
+            headerText.style.fontSize = `${20 + (50 * window.pageYOffset / window.innerHeight)}px`
+        })
+    </script>
+</body>
+
+</html>
